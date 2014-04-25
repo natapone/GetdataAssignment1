@@ -4,10 +4,11 @@ read_test_data <- function(directory = "./Dataset/test") {
     file_name <- paste(directory, file_name, sep = "/")
 
     feature_table   <- get_feature_name()
-    feature_measure <- get_measure_feature(feature_table)
-    print(feature_measure)
+    feature_measure <- get_feature_measure(feature_table)
 
+    print(feature_measure)
     print(length(feature_measure))
+    print(class(feature_measure))
     #return()
 
     # read data file
@@ -17,17 +18,19 @@ read_test_data <- function(directory = "./Dataset/test") {
     # filter mean and std columns
     #???
     dt <- dt[, feature_measure]
-    head(dt)
-
+    print(head(dt))
+    print(ncol(dt))
+    1
 }
 
-get_measure_feature <- function(feature_table) {
-    print(class(feature_table))
+get_feature_measure <- function(feature_table) {
+    #print(class(feature_table))
 
     valid_feature <- grep("\\-mean\\(\\)|\\-std\\(\\)", feature_table$feature, perl = T)
     #print(grepl("std()", feature_table$feature)   )
 
-    feature_table$feature[valid_feature]
+    feature_measure <-feature_table$feature[valid_feature]
+    as.character(feature_measure)
 }
 
 get_feature_name <- function(directory = "./Dataset") {
