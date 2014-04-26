@@ -34,37 +34,22 @@ read_clean_data <- function (dataset = "./Dataset") {
     clean_data
 }
 
+# read text file from specific folder
 read_data_text <- function(directory = "./Dataset/test", set = "test") {
     # read feature name
     feature_table   <- get_feature_name()
-    #feature_measure <- get_feature_measure(feature_table)
-
-    #print(feature_measure)
-    #print(length(feature_measure))
-    #print(class(feature_measure))
     
     #read activities with proper label
     activity_table  <- get_activity_label()
-    #print(activity_table)
     
     # read activity data file
     dt_activity <- read_activity_data(directory, activity_table, set)
-    #print(tail(dt_activity))
-    #print(nrow(dt_activity))
     
     # read subject data file
     dt_subject <- read_subject_data(directory, set)
-    #print(tail(dt_subject))
-    #print(nrow(dt_subject))
     
-
     # read feature data file
     dt_feature <- read_feature_data(directory, feature_table, set)
-    
-    #print(tail(dt_feature))
-    #print(ncol(dt_feature))
-    #print(nrow(dt_feature))
-    #return()
     
     # merge subject, activity and feature
     cbind(dt_subject, dt_activity, dt_feature)
@@ -72,7 +57,6 @@ read_data_text <- function(directory = "./Dataset/test", set = "test") {
 
 # read subject data
 read_subject_data <- function(directory, set) {
-    #file_name <- "subject_test.txt"
     file_name <- paste("subject_", set, ".txt", sep="")
     file_name <- paste(directory, file_name, sep = "/")
     dt_subject <- read.table(file_name, header=F)
@@ -83,7 +67,6 @@ read_subject_data <- function(directory, set) {
 
 # read feature data and filter only measured column
 read_feature_data <- function(directory, feature_table, set) {
-    #file_name <- "X_test.txt"
     file_name <- paste("X_", set, ".txt", sep="")
     file_name <- paste(directory, file_name, sep = "/")
     
@@ -140,13 +123,8 @@ get_activity_label <- function(directory = "./Dataset") {
 }
 
 get_feature_measure <- function(feature_table) {
-    #print(class(feature_table))
 
     valid_feature <- grep("\\-mean\\(\\)$|\\-std\\(\\)$", feature_table$feature, perl = T)
-    #valid_feature <- grep("fBodyAcc-mean\\(\\)", feature_table$feature, perl = T)
-    
-    #print(grepl("std()", feature_table$feature)   )
-
     feature_measure <-feature_table$feature[valid_feature]
     as.character(feature_measure)
 }
@@ -171,8 +149,3 @@ cap_first <- function(str) {
     )
 }
 
-#source("run_analysis.R")
-#read_data_text()
-
-#source("run_analysis.R")
-#get_feature_names()
