@@ -142,7 +142,7 @@ get_activity_label <- function(directory = "./Dataset") {
 get_feature_measure <- function(feature_table) {
     #print(class(feature_table))
 
-    valid_feature <- grep("\\-mean\\(\\)|\\-std\\(\\)", feature_table$feature, perl = T)
+    valid_feature <- grep("\\-mean\\(\\)$|\\-std\\(\\)$", feature_table$feature, perl = T)
     #valid_feature <- grep("fBodyAcc-mean\\(\\)", feature_table$feature, perl = T)
     
     #print(grepl("std()", feature_table$feature)   )
