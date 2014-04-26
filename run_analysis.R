@@ -1,6 +1,4 @@
-read_data_text <- function(directory = "./Dataset/test", subject=F, feature_filter=T) {
-    library(data.table)
-    
+read_data_text <- function(directory = "./Dataset/test", feature_filter=T) {
     # read feature name
     feature_table   <- get_feature_name()
     #feature_measure <- get_feature_measure(feature_table)
@@ -15,18 +13,34 @@ read_data_text <- function(directory = "./Dataset/test", subject=F, feature_filt
     
     # read activity data file
     dt_activity <- read_activity_data(directory, activity_table)
-    print(tail(dt_activity))
-    #print(dt_activity[,dt_activity[1]])
+    #print(tail(dt_activity))
     print(nrow(dt_activity))
+    
+    # read subject data file
+    dt_subject <- read_subject_data(directory)
+    #print(tail(dt_subject))
+    print(nrow(dt_subject))
     #return()
 
     # read feature data file
     dt_feature <- read_feature_data(directory, feature_table, feature_filter)
     
-    print(tail(dt_feature))
+    #print(tail(dt_feature))
     print(ncol(dt_feature))
     print(nrow(dt_feature))
-    1
+    
+    # merge subject, activity and feature
+    cbind(dt_subject, dt_activity, dt_feature)
+}
+
+# read subject data
+read_subject_data <- function(directory) {
+    file_name <- "subject_test.txt"
+    file_name <- paste(directory, file_name, sep = "/")
+    dt_subject <- read.table(file_name, header=F)
+    # name colume
+    colnames(dt_subject) <- c("subjectID")
+    as.data.table(dt_subject)
 }
 
 # read feature data and filter only measured column
