@@ -1,9 +1,9 @@
-read_data_text <- function(directory = "./Dataset/test", subject=F, activity=T, feature_filter=T) {
+read_data_text <- function(directory = "./Dataset/test", subject=F, feature_filter=T) {
     library(data.table)
     
     # read feature name
     feature_table   <- get_feature_name()
-    feature_measure <- get_feature_measure(feature_table)
+    #feature_measure <- get_feature_measure(feature_table)
 
     #print(feature_measure)
     #print(length(feature_measure))
@@ -16,25 +16,37 @@ read_data_text <- function(directory = "./Dataset/test", subject=F, activity=T, 
     # read activity data file
     dt_activity <- read_activity_data(directory, activity_table)
     print(tail(dt_activity))
-    return()
+    #print(dt_activity[,dt_activity[1]])
+    print(nrow(dt_activity))
+    #return()
 
     # read feature data file
+    dt_feature <- read_feature_data(directory, feature_table, feature_filter)
+    
+    print(tail(dt_feature))
+    print(ncol(dt_feature))
+    print(nrow(dt_feature))
+    1
+}
+
+# read feature data and filter only measured column
+read_feature_data <- function(directory, feature_table, feature_filter) {
     file_name <- "X_test.txt"
     file_name <- paste(directory, file_name, sep = "/")
     
     dt_feature <- read.table(file_name, header=F)
     colnames(dt_feature) <- feature_table$feature
-
-    # filter mean and std columns
-    if (length(feature_measure) > 0) {
-        dt_feature <- dt_feature[, feature_measure]
+    
+    # filter feature
+    if (feature_filter) {
+        feature_measure <- get_feature_measure(feature_table)
+        # filter mean and std columns
+        if (length(feature_measure) > 0) {
+            dt_feature <- dt_feature[, feature_measure]
+        }
     }
     
-    
-    print(head(dt_feature))
-    print(ncol(dt_feature))
-    print(nrow(dt_feature))
-    1
+    as.data.table(dt_feature)
 }
 
 # read activity data and replace id with descriptive label
