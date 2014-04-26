@@ -10,7 +10,9 @@ You should create one R script called run_analysis.R that does the following.
 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 ## How to use?
-Run the script below:
+1. Copy "getdata-projectfiles-UCI HAR Dataset.zip" to working directory
+2. Rename folder to "Dataset"
+3. Run the script below:
 
 ```
 source("run_analysis.R")
