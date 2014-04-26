@@ -1,35 +1,63 @@
-read_data_text <- function(directory = "./Dataset/test", file_name="X_test.txt", subject=F, activity=T, feature_filter=T) {
+read_data_text <- function(directory = "./Dataset/test", subject=F, activity=T, feature_filter=T) {
     library(data.table)
-    file_name <- paste(directory, file_name, sep = "/")
     
     # read feature name
     feature_table   <- get_feature_name()
     feature_measure <- get_feature_measure(feature_table)
 
-    print(feature_measure)
-    print(length(feature_measure))
-    print(class(feature_measure))
+    #print(feature_measure)
+    #print(length(feature_measure))
+    #print(class(feature_measure))
     
     #read activities with proper label
     activity_table  <- get_activity_label()
-    print(activity_table)
+    #print(activity_table)
     
+    # read activity data file
+    dt_activity <- read_activity_data(directory, activity_table)
+    print(tail(dt_activity))
     return()
 
-    # read data file
-    dt <- read.table(file_name, header=F)
-    colnames(dt) <- feature_table$feature
+    # read feature data file
+    file_name <- "X_test.txt"
+    file_name <- paste(directory, file_name, sep = "/")
+    
+    dt_feature <- read.table(file_name, header=F)
+    colnames(dt_feature) <- feature_table$feature
 
     # filter mean and std columns
     if (length(feature_measure) > 0) {
-        dt <- dt[, feature_measure]
+        dt_feature <- dt_feature[, feature_measure]
     }
     
     
-    print(head(dt))
-    print(ncol(dt))
-    print(nrow(dt))
+    print(head(dt_feature))
+    print(ncol(dt_feature))
+    print(nrow(dt_feature))
     1
+}
+
+# read activity data and replace id with descriptive label
+read_activity_data <- function(directory, activity_table) {
+    file_name <- "y_test.txt"
+    file_name <- paste(directory, file_name, sep = "/")
+    dt_activity <- read.table(file_name, header=F)
+    # name colume
+    colnames(dt_activity) <- c("activity")
+    dt_activity <- as.data.table(dt_activity)
+    
+    # replace id with descriptive name
+    for(id in 1:nrow(activity_table)){
+        #print(activity_table[id]$activity_label )
+        dt_activity[ , activity := sub( 
+                pattern     = activity_table[id]$id, 
+                replacement = activity_table[id]$activity_label, 
+                x           = dt_activity$activity 
+            )
+        ]
+    }
+    
+    dt_activity
 }
 
 get_activity_label <- function(directory = "./Dataset") {
@@ -43,7 +71,7 @@ get_activity_label <- function(directory = "./Dataset") {
     # rename label
     # - remove "_"
     # - capitalize the first letter
-    dt[ , activity_label := sub( pattern="_", replacement=" ",x=activity_abb )]
+    dt[ , activity_label := gsub( pattern="_", replacement=" ",x=activity_abb )]
     dt[ , activity_label := sapply(activity_label, cap_first)]
     dt
 }
